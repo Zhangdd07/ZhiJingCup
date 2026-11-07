@@ -16,7 +16,11 @@ typedef struct
     uint32_t ch_in2;            /**< L298N IN2 对应的 PWM 通道 */
 } Motor_Hw_t;
 
-/* 下标顺序必须与 Motor_ID 一致 */
+/* 下标顺序必须与 Motor_ID 一致。
+ * 如果单轮点动时发现“编号和实际的轮子位置对不上”（例如点 MOTOR_LB 转的却是
+ * 右后轮），说明 PB6/PB7 与 PB8/PB9 的接线接反了：只要把下面第 3、4 两行
+ * 对调即可，不用重新焊接接线。
+ * 注意：这种“身份接反”不会影响前进/后退（四轮同号），但会把左转/右转变成平移。 */
 static const Motor_Hw_t s_motor_hw[MOTOR_NUM] =
 {
     { &htim3, TIM_CHANNEL_1, TIM_CHANNEL_2 },   /* MOTOR_LF：PA6 / PA7 */
