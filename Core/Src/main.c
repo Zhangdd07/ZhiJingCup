@@ -18,11 +18,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "../../app/inc/app_motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,7 +33,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+/* 底盘自检开关：
+ *   1 = 上电后自动执行 前进 -> 后退 -> 左转 -> 右转 -> 停车，各 1 秒；
+ *   0 = 只保留正式逻辑。
+ * 第一次接线调试请先保持 1，确认四个轮子方向都正确后改成 0。 */
+#define CAR_DEMO_ENABLE   0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -86,17 +91,43 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+  /* 底盘初始化：启动 TIM3 / TIM4 共 8 路 PWM，默认速度 CAR_SPEED_DEFAULT */
+  Car_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+#if CAR_DEMO_ENABLE
+    /* ---------- 底盘自检：依次跑一遍四个基本动作 ---------- */
+    Car_Forward();
+    HAL_Delay(1000);
+    Car_Backward();
+    HAL_Delay(1000);
+    Car_TurnLeft();
+    HAL_Delay(1000);
+    Car_TurnRight();
+    HAL_Delay(1000);
+    Car_Stop();
+    HAL_Delay(1000);
+#else
+    /* ---------- 正式逻辑写在这里，例如 ----------
+     * Car_SetSpeed(60);
+     * Car_Forward();
+     * HAL_Delay(2000);
+     * Car_TurnLeft();
+     * HAL_Delay(500);
+     * Car_Stop();
+     */
+#endif
   }
   /* USER CODE END 3 */
 }
