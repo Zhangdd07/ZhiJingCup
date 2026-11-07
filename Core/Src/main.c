@@ -33,11 +33,13 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-/* 底盘自检开关：
- *   1 = 上电后自动执行 前进 -> 后退 -> 左转 -> 右转 -> 停车，各 1 秒；
- *   0 = 只保留正式逻辑。
- * 第一次接线调试请先保持 1，确认四个轮子方向都正确后改成 0。 */
-#define CAR_DEMO_ENABLE   0
+/* 底盘调试模式：
+ *   0 = 关闭，只跑你自己的正式逻辑；
+ *   1 = 单轮点动标定：依次单独驱动 左前 -> 右前 -> 左后 -> 右后，各 1 秒。
+ *       用来确认“哪个通道驱动哪个轮子”以及“正转是不是车头方向”；
+ *   2 = 四动作自检：前进 -> 后退 -> 左转 -> 右转 -> 停车，各 1 秒。
+ * 接线还没确认过时请用 1，标定完再改成 2 检查整车动作。 */
+#define CAR_DEMO_MODE   0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -102,12 +104,39 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    Car_Forward();
+    HAL_Delay(10000);
+    Car_TurnRight();
+    HAL_Delay(2000);
     
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-#if CAR_DEMO_ENABLE
-    /* ---------- 底盘自检：依次跑一遍四个基本动作 ---------- */
+#if (CAR_DEMO_MODE == 1)
+    /* ---------- 单轮点动：同一时刻只有一个轮子转 ----------
+     * 参数顺序是 (左前, 右前, 左后, 右后)，速度单位是百分比。
+     * 每一段停下来时，记下：转的是哪个位置的轮子？转向是不是车头方向？ */
+    Car_SetWheelSpeed( 40,  0,  0,  0);   /* 左前 LF：PA6 / PA7 */
+    HAL_Delay(1000);
+    Car_Stop();
+    HAL_Delay(800);
+
+    Car_SetWheelSpeed(  0, 40,  0,  0);   /* 右前 RF：PB0 / PB1 */
+    HAL_Delay(1000);
+    Car_Stop();
+    HAL_Delay(800);
+
+    Car_SetWheelSpeed(  0,  0, 40,  0);   /* 左后 LB：PB6 / PB7 */
+    HAL_Delay(1000);
+    Car_Stop();
+    HAL_Delay(800);
+
+    Car_SetWheelSpeed(  0,  0,  0, 40);   /* 右后 RB：PB8 / PB9 */
+    HAL_Delay(1000);
+    Car_Stop();
+    HAL_Delay(1500);
+#elif (CAR_DEMO_MODE == 2)
+    /* ---------- 四动作自检：前进 -> 后退 -> 左转 -> 右转 -> 停车 ---------- */
     Car_Forward();
     HAL_Delay(1000);
     Car_Backward();
