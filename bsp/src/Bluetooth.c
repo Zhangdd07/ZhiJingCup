@@ -18,6 +18,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     }else if (receive_Data == 'S') {
         Car_Stop();
     }
+    HAL_UART_Receive_IT(&huart2, &receive_Data, 1);
 }
 int _write(int file, char *ptr, int len)
 {
