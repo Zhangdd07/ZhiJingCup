@@ -36,7 +36,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         bsp/src/bsp_motor.c
         bsp/inc/bsp_motor.h
         app/src/app_motor.c
-        app/inc/app_motor.h)
+        app/inc/app_motor.h
+        bsp/src/Bluetooth.c
+        bsp/inc/Bluetooth.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

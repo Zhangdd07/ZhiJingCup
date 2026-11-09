@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -95,6 +96,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   /* 底盘初始化：启动 TIM3 / TIM4 共 8 路 PWM，默认速度 CAR_SPEED_DEFAULT */
   Car_Init();
