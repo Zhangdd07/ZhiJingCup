@@ -5,12 +5,9 @@
 #ifndef COMPETATION_BLUETOOTH_H
 #define COMPETATION_BLUETOOTH_H
 
-#include <stdint.h>
-
 #include "stm32f1xx_hal_uart.h"
-#include "usart.h"
 
-char receive_Data;
+extern uint8_t receive_Data[50];
 
 int _write(int file, char *ptr, int len);
 

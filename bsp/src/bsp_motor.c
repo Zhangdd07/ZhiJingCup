@@ -7,6 +7,7 @@
 
 #include "../inc/bsp_motor.h"
 #include "../../Core/Inc/tim.h"
+int32_t Pulse = 0;
 
 /* 每个轮子的硬件资源：一个定时器的两路 PWM 分别接到 L298N 的 IN1 / IN2 */
 typedef struct
@@ -157,5 +158,12 @@ void Motor_StopAll(void)
     for (i = 0; i < (uint32_t)MOTOR_NUM; i++)
     {
         Motor_Stop((Motor_ID)i);
+    }
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == GPIO_PIN_11) {
+        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12) == GPIO_PIN_SET) Pulse++;
+        else Pulse--;
     }
 }

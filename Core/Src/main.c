@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 #include "../../app/inc/app_motor.h"
 #include "../../bsp/inc/Bluetooth.h"
+#include "../../app/inc/motor_speed.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,7 +100,7 @@ int main(void)
   MX_TIM4_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Receive_IT(&huart2, &receive_Data, 1);
+  HAL_UART_Receive_IT(&huart2, receive_Data, 1);
   /* 底盘初始化：启动 TIM3 / TIM4 共 8 路 PWM，默认速度 CAR_SPEED_DEFAULT */
   Car_Init();
   /* USER CODE END 2 */
@@ -108,11 +109,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    Car_Forward();
-    HAL_Delay(10000);
-    Car_TurnRight();
-    HAL_Delay(2000);
-    
+    Car_Backward();
+    // HAL_Delay(10000);
+    // Car_TurnRight();
+    // HAL_Delay(2000);
+    MotorSpeed_Calculation();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -42,6 +42,7 @@ extern "C" {
 #define MOTOR_SPEED_MAX   100
 #define MOTOR_SPEED_MIN   (-MOTOR_SPEED_MAX)
 
+extern int32_t Pulse;
 /* =================================================================== */
 
 /** 电机编号（与硬件一一对应，供上层按轮子单独调速） */
